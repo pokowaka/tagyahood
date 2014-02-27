@@ -1,0 +1,176 @@
+TAG YA HOOD
+A GRAFFITI INSPIRED LOCATION BASED GAME
+
+Graffiti is writing or drawings that have been scribbled, scratched, or sprayed illicitly on a wall or other surface in a public place. Graffiti ranges from simple written words to elaborate wall paintings, and it has existed since ancient times, with examples dating back to Ancient Egypt, Ancient Greece, and the Roman Empire. 
+
+In modern times, paint (particularly spray paint) and marker pens have become the most commonly used graffiti materials. In most countries, marking or painting property without the property owner's consent is considered defacement and vandalism, which is a punishable crime.
+
+wikipedia 
+
+Overall Vision
+Tag ya hood is a game where a player tries to became become famous and conquer territory for their crew.  Players do this by placing colored graffiti on a black and white map. Claiming  territory can be done by placing art pieces on a map  (tags). 
+Crews battle with each other  for territory, and players try to become famous by propagating their art as far as possible . 
+The player should be delivered the following experiences:
+
+•	Unique: The player should really get a sense of what graffiti culture is about. 
+•	Exploration: The art should be enticing such that players are willing to travel to locations to see the art pieces.  Players can collect the art they encounter in their black book . 
+•	Effortless: The player should be able to jump in immediately, it the game should be playable for those with little art skills, as well as those who make great art.  
+•	Community: Players will interact with each other in the community  to coordinate attacks , meet and share art. 
+•	Progress: Players will have a sense of progress, they can become more important  in the community.
+
+•	Excitement: There should be some sense of urgency  at times that captures the excitement of  illegal tagging. The excitement should be such that people will engage with the game.  (How do we do this?) 
+
+The game will be monetized through in app purchase of “credits/paint” that allow a player to create more tags.  
+
+Target Audience
+The target audience are young adults who like to play the game a few minutes every day.  
+
+ 
+
+
+Verder ben ik nog niet gekomen.
+
+Platform
+Initially we will target the android platform and possibly later extend to include IOS/Windows 8. Minimum requirements for the device are:
+
+•	Have internet connection
+•	Have location information
+
+(A quick test on an android devices shows that HTML5 is likely not good enough)
+
+
+Core gameplay
+
+Map
+The game takes place on a real world black & white 2d map. 
+Writer
+A practitioner of writing, a graffiti artist. Every player will be a writer and will be part of a crew. Initially the game will consist of 3 crews.
+Paint
+Paint is the currency in the game. A player uses paint to create tags, throw-ups and pieces. Paint can be acquired through “Racking” (i.e. stealing of paint from a local store) or by purchasing it through the app store. Racking should be balanced such that it is enough to keep you playing the game, but does not let you do a huge amount.   
+
+Tag 
+A stylized signature, normally done in one color. The simplest and most prevalent type of graffiti, a tag is often done in a color that contrasts sharply with its background. Tag can also be used as a verb meaning "to sign". Writers often tag on or beside their pieces, following the practice of traditional artists who sign their artwork.
+
+A Tag, a tag is a very basic drawing that is unique to the player. A tag can be placed on the map. Every player will create their own tag when they join the game.  A tag allows a player to claim a little piece of area. Placing a tag will cost the player paint. 
+
+Tags are your soldiers
+
+Throw Up
+A throw-up or "throwie" sits between a tag and a bomb in terms of complexity and time investment. It generally consists of a one color outline and one layer of fill-color. Easy-to-paint bubble shapes often form the letters. A throw-up is designed for quick execution, to avoid attracting attention to the writer. Throw-ups are often utilized by writers who wish to achieve a large number of tags while competing with rival artists. Most artists have both a tag and a throw-up that are essentially fixed compared to pieces. It is mostly so because they need to have a recognizable logo for others to identify them and their own individual styles.
+
+The player can either create their own Throw Up and share it with the rest of the crew, or the player can reuse any throw up created by any other member of the crew. This will allow people with little artistic talent to participate in the game, artists however will get to see their throw up appear in different locations due to others adopting it. 
+
+(Note we will include stencils in this as well)
+
+Throw ups are your tanks
+
+ 
+
+Piece
+A large, complex, and labor-intensive graffiti painting. Pieces often incorporate 3-D effects, arrows, and many colors and color-transitions, as well as various other effects. These will usually be done by writers with more experience. Originally shorthand for masterpiece, considered the full and most beautiful work of graffiti). A piece requires more time to paint than a throw-up. If placed in a difficult location and well executed it will earn the writer more respect. Piece can also be used as a verb that means: "to write”.
+
+Pieces cannot be made by a single player, a piece requires a player to team with other members of its crew. Together they can select a piece from an existing library. 
+Pieces are  your forts
+
+Black Book
+A graffiti artist's sketchbook. Often used to sketch out and plan potential graffiti, and to collect tags from other writers. It is a writer's most valuable property, containing all or a majority of the person's sketches and pieces. A writer’s sketchbook is carefully guarded from the police and other authorities, as it can be used as material evidence in a graffiti vandalism case and link a writer to previous illicit works. Each time when a player encounters a new tag, throw up or piece it is placed in the black book. 
+
+
+
+Technical Details
+Game play takes place on a slippy map (http://wiki.openstreetmap.org/wiki/Slippy_map_tilenames). Web maps are made up of many small, square images called tiles. These tiles are typically 256x256 pixels and are placed side-by-side in order to create the illusion of a very large seamless image.
+
+ 
+
+
+
+
+
+Each time when you go from one zoom level to the next, the tile gets subdivided into 4 more tiles.  So at zoom level 0 there is on tile, zoom level 1 there are 4, etc.. The map we will use will go up to zoom level 18. 
+
+A tag can be placed on a tile on zoom level 18 (1 tile at zoom 18 = 150m x 150m). This implies that a tag only be 256x256 pixels.
+
+To give an idea, at zoom level 12 San Francisco occupies 2 tiles. At zoom level 18 there are around 6000 in SF. This means players can divvy up 6000 squares. See also http://wiki.openstreetmap.org/wiki/Slippy_map_tilenames#Resolution_and_Scale
+
+Game mechanics (NEEDS WORK)
+The basic idea is that players can play pieces on a square board. The pieces have a size and can be placed upon the board in the area where the player currently is. Placing an object results in claiming that board piece. For every object owned by that player it will receive points. The number of points are player receives are:
+
+Fame Per Object = Object Score * minutes alive
+Crew score = Sum Members
+
+
+Object		Size	Cost	Fame points/minute	Lifetime 
+Tag	1x1	5	1	1 week
+Throw Up		4x4	70	32	2 week
+Piece	16x16	1000	1000	16 weeks
+Clean	1x1	5	0	Permanent
+Slash	1x1			1	-0.5 * [Object] (both slasher & victim)	1 week
+Fixup			1x1	(% of  decay)?		
+
+
+By slashing a piece you are putting a big X through the artwork (should it leave a message?). It reduces the points another player is getting from their art, however the person placing the slash will get these negative points as well. (Slashing is considered very poor form in graffiti culture and is basically a declaration of war)
+
+We can simulate game play on a chess board, and see what type of game mechanics can be engaging. 
+
+
+
+
+Weekly Challenges:
+We can keep players engaged and excited by introducing challenges for crews:
+
+•	Master Piece: Which crew can put up the most pieces?
+•	City Bomber: Which crew can create the most throw ups?
+•	Slash & Burn: Which crew can slash the most objects?
+•	Art makers: Which crew can upload the most new Pieces & Stencils & Throw Ups?
+•	Land Grabber: Which crew can occupy the most board slots
+•	Toy maker: Which crew has the most new writers? (New writers are called toys in graffiti terms)
+•	City cleaner: Which crew cleans out the most objects?
+•	….
+
+Achievements:
+Here are the achievements that players can get:
+
+•	Toy: You just joined a crew
+•	Up: You made a tag, throw up, stencil & piece.
+•	Tagger: You’ve placed x tags
+•	Bomber: You’ve placed x throw ups
+•	Burner: Make at least x pieces.
+•	Going over: You have destroyed x tags by painting throws up over them.
+•	All City: You conquered at least x places on the map
+•	Bombing the City: Place x tags & y throw ups in z number of minutes
+•	Back to back: Place x tags next to each other
+•	Buff: Clean at least x number of tags
+•	Hat: You have collected at least x objects in your black book
+•	King/Queen: You have the most tags up in your area (You likely won’t get to keep this for long)
+•	Married couple: You have made 2 pieces next to each other
+•	Hater: You’ve slashed at least x objects.
+•	Biter: Use at least x different throw ups
+•	Dress Up: Tagged every square of a piece of an opponent
+•	Full House: You managed to get all the achievements.
+
+Do achievements increase your fame score?
+
+Ideas & Suggestions
+
+This is a collection of ideas and suggestions that have not yet been worked out:
+
+
+Graffiti contains an element of battle against society, the aspect of vandalism should somehow be part of the game. An unwanted social ill. There is a line between vandalism and graffiti art, can we capture this?
+
+•	Cops are automatons, part of the system.
+•	Depending on what you are tagging you should lose or gain points. If you tag/vandalize a small local business you should lose points. If you tag a bank, a corporation, anything clearly out of its element then you should get extra points. You are no longer part of the system you are taking it back.
+•	Perhaps you could play as “the system”, you’re a cop, you chase the writers.
+•	Maybe you can be thrown in jail? Result is that all your tags are removed but you become incredibly famous & legit.. Perhaps an enemy can throw you in jail?
+
+
+ 
+
+
+
+
+Links for inspiration
+•	http://www.youtube.com/watch?v=ETRa_tx9c2w&t=187 (Style wars)
+•	http://www.youtube.com/watch?v=TBXbYZKCI7U (Getting Up, very good overview of graffiti culture)
+•	http://en.wikipedia.org/wiki/Glossary_of_graffiti (Terms used in the game)
+•	https://www.mapbox.com/developers/guide/ (How do maps work?)
+•	http://wiki.openstreetmap.org/wiki/Slippy_map_tilenames
