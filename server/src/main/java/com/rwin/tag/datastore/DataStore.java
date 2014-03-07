@@ -4,12 +4,19 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.rwin.tag.datamodel.ArtPiece;
+import com.rwin.tag.datamodel.Marker;
+import com.rwin.tag.datamodel.User;
 import com.rwin.tag.tile.OpenTile;
 
 public class DataStore {
+
+    private static final Logger LOG = LoggerFactory.getLogger(DataStore.class);
 
     static DataStore instance = new DataStore();
 
@@ -73,6 +80,31 @@ public class DataStore {
 
     public User getUser(String name) {
         return this.userMap.get(name);
+    }
+
+    public List<Marker> getMarkers(int zoom, int x, int y, int width, int height) {
+        int w = OpenTile.getXTile(OpenTile.tile2boundingBox(x, y, zoom).west,
+                Marker.MAX_ZOOM);
+        int e = OpenTile.getXTile(
+                OpenTile.tile2boundingBox(x + width, y, zoom).east,
+                Marker.MAX_ZOOM);
+        int n = OpenTile.getYTile(OpenTile.tile2boundingBox(x, y, zoom).north,
+                Marker.MAX_ZOOM);
+        int s = OpenTile.getYTile(
+                OpenTile.tile2boundingBox(x, y + height, zoom).south,
+                Marker.MAX_ZOOM);
+
+        LOG.info("Looking for " + w + " ," + e + "," + n + ", " + s);
+        List<Marker> found = new ArrayList<Marker>();
+
+        // 41918 ,41924,101317, 101319
+        for (Marker t : tags) {
+            // "x":41918,"y":101318
+            if (n <= t.y && t.y <= s && w <= t.x && t.x <= e) {
+                found.add(t);
+            }
+        }
+        return found;
     }
 
 }

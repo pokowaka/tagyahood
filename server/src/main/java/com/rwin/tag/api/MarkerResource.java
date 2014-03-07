@@ -16,9 +16,9 @@ import javax.ws.rs.core.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.rwin.tag.datamodel.Marker;
+import com.rwin.tag.datamodel.User;
 import com.rwin.tag.datastore.DataStore;
-import com.rwin.tag.datastore.Marker;
-import com.rwin.tag.datastore.User;
 
 @Path("/v1/marker/")
 public class MarkerResource {
@@ -34,8 +34,11 @@ public class MarkerResource {
     @Path("{zoom}/{x}/{y}")
     @Produces(MediaType.APPLICATION_JSON)
     public List<Marker> getMarkers(@PathParam("zoom") int zoom,
-            @PathParam("x") int x, @PathParam("y") int y) {
-        return DataStore.getInstance().getMarkers(zoom, x, y);
+            @PathParam("x") int x, @PathParam("y") int y,
+            @QueryParam("width") int width, @QueryParam("height") int height) {
+        log.info("getMarkers: zoom: " + zoom + " x: " + x + " y: " + y
+                + " width: " + width + " height: " + height);
+        return DataStore.getInstance().getMarkers(zoom, x, y, width, height);
     }
 
     @PUT
@@ -44,6 +47,8 @@ public class MarkerResource {
     public Marker placeMarker(@PathParam("zoom") int zoom,
             @PathParam("x") int x, @PathParam("y") int y,
             @QueryParam("id") String name) {
+        log.info("placeMarker: zoom: " + zoom + " x: " + x + " y: " + y
+                + " name: " + name);
         if (zoom != Marker.MAX_ZOOM)
             throw new IllegalArgumentException("Zoom level has to be "
                     + Marker.MAX_ZOOM);

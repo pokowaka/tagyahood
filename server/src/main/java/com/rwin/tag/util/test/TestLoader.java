@@ -8,10 +8,10 @@ import java.util.Random;
 
 import javax.imageio.ImageIO;
 
-import com.rwin.tag.datastore.ArtPiece;
+import com.rwin.tag.datamodel.ArtPiece;
+import com.rwin.tag.datamodel.Marker;
+import com.rwin.tag.datamodel.User;
 import com.rwin.tag.datastore.DataStore;
-import com.rwin.tag.datastore.Marker;
-import com.rwin.tag.datastore.User;
 
 public class TestLoader {
 

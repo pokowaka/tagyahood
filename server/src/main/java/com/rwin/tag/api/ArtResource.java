@@ -8,7 +8,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 
-import com.rwin.tag.datastore.ArtPiece;
+import com.rwin.tag.datamodel.ArtPiece;
 import com.rwin.tag.datastore.DataStore;
 
 @Path("/v1/art/")
@@ -21,7 +21,7 @@ public class ArtResource {
         ArtPiece a = DataStore.getInstance().getArtPiece(id);
         if (a == null)
             throw new NotFoundException("Artpiece does not exist");
-        return a.img;
+        return (RenderedImage) a.img;
     }
 
 }

@@ -19,10 +19,10 @@ import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.rwin.tag.datastore.ArtPiece;
+import com.rwin.tag.datamodel.ArtPiece;
+import com.rwin.tag.datamodel.Marker;
+import com.rwin.tag.datamodel.User;
 import com.rwin.tag.datastore.DataStore;
-import com.rwin.tag.datastore.Marker;
-import com.rwin.tag.datastore.User;
 
 @Path("/v1/user/")
 public class UserResource {
@@ -58,7 +58,7 @@ public class UserResource {
     @Produces(MediaType.APPLICATION_JSON)
     public RenderedImage getUserTag(@PathParam("name") String name) {
         User u = getUserFromStore(name);
-        return u.tag.img;
+        return (RenderedImage) u.tag.img;
     }
 
     @POST
