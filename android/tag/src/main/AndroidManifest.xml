@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.rwin.tag"
-    android:versionCode="1"
-    android:versionName="0.1.1d" >
+    package="com.rwin.tag" >
 
     <uses-sdk
-        android:minSdkVersion="8"
+        android:minSdkVersion="11"
         android:targetSdkVersion="19" />
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />

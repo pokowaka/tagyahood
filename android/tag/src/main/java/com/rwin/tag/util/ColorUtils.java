@@ -2,6 +2,8 @@ package com.rwin.tag.util;
 
 import android.graphics.Color;
 
+import com.rwin.tag.BuildConfig;
+
 public class ColorUtils {
 
     private static final int RGBMAX = 255;
@@ -13,8 +15,6 @@ public class ColorUtils {
     public final static int[] tetradic = { 0, 30, 180, 210 };
     public final static int[] triadic = { 0, 150, 210 };
 
-    
-    
     public int[] getColors(int baseColor, int[] scheme) {
         int[] result = new int[scheme.length];
         float[] hsv = new float[3];
@@ -28,7 +28,10 @@ public class ColorUtils {
             if (hsv[0] < 0)
                 hsv[0] += 360;
 
-            assert hsv[0] >= 0 && hsv[0] <= 360;
+            if (BuildConfig.DEBUG && !(hsv[0] >= 0 && hsv[0] <= 360)) {
+                throw new AssertionError();
+            }
+
             result[i] = Color.HSVToColor(hsv);
         }
 
