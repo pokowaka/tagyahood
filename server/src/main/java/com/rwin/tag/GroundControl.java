@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 
 import com.rwin.tag.api.CorsSupportFilter;
 import com.rwin.tag.api.ImageProvider;
+import com.rwin.tag.util.test.TestLoader;
 
 /**
  * Start a server, attach a client, and send a message.
@@ -70,11 +71,15 @@ public class GroundControl {
         rc.register(CorsSupportFilter.class);
         rc.register(ImageProvider.class);
         rc.register(MultiPartFeature.class);
-        rc.packages("com.ctenophore.tag.api");
+        rc.packages("com.rwin.tag.api");
         rc.register(GZipEncoder.class);
         final HttpServer server = GrizzlyHttpServerFactory.createHttpServer(
                 URI.create(baseUri), rc);
         server.start();
+
+        TestLoader.CreateData();
+
+        // block and wait so we can serve rest stuff.
         Semaphore s = new Semaphore(-1);
         s.acquire();
     }

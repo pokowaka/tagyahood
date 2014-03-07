@@ -28,8 +28,8 @@ public class OpenTile {
             final int outzoom) {
         // TODO(ErwinJ): There likely is a faster & safer way..
         OpenTile bb = new OpenTile();
-        bb.north = getYTile(tile2lat(y, zoom), outzoom);
-        bb.south = getYTile(tile2lat(y + 1, zoom), outzoom);
+        bb.north = getYTile(tile2lat(y + 1, zoom), outzoom);
+        bb.south = getYTile(tile2lat(y, zoom), outzoom);
         bb.west = getXTile(tile2lon(x, zoom), outzoom);
         bb.east = getXTile(tile2lon(x + 1, zoom), outzoom);
         return bb;

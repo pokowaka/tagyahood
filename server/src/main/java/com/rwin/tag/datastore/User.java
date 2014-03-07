@@ -1,19 +1,18 @@
 package com.rwin.tag.datastore;
 
-import java.awt.image.RenderedImage;
 import java.util.Collection;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.rwin.tag.util.Util;
 
 public class User {
 
     public String name;
-    
+
     @JsonIgnore
     public String passwd;
 
-    @JsonIgnore
-    public RenderedImage img;
+    public ArtPiece tag;
 
     @JsonIgnore
     public Collection<Marker> markers;
@@ -21,11 +20,15 @@ public class User {
     public User() {
     }
 
-    public User(String name, String passwd, RenderedImage img) {
+    public User(String name, String passwd, ArtPiece tag) {
         super();
         this.name = name;
         this.passwd = passwd;
-        this.img = img;
+        this.tag = tag;
     }
 
+    @Override
+    public String toString() {
+        return Util.toJsonString(this);
+    }
 }

@@ -19,6 +19,7 @@ import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.rwin.tag.datastore.ArtPiece;
 import com.rwin.tag.datastore.DataStore;
 import com.rwin.tag.datastore.Marker;
 import com.rwin.tag.datastore.User;
@@ -54,10 +55,10 @@ public class UserResource {
 
     @GET
     @Path("{name}/img")
-    @Produces("image/png")
+    @Produces(MediaType.APPLICATION_JSON)
     public RenderedImage getUserTag(@PathParam("name") String name) {
         User u = getUserFromStore(name);
-        return u.img;
+        return u.tag.img;
     }
 
     @POST
@@ -66,8 +67,11 @@ public class UserResource {
     public User createUser(@FormDataParam("picture") InputStream entityStream,
             @FormDataParam("name") String name,
             @FormDataParam("passwd") String passwd) throws IOException {
+
+        // Store the image somewhere..
         RenderedImage img = ImageIO.read(entityStream);
-        User user = new User(name, passwd, img);
+        ArtPiece art = ArtPiece.getTag(img);
+        User user = new User(name, passwd, art);
         DataStore.getInstance().addUser(user);
 
         LOG.info("createUser: entityStream: " + entityStream + ", name: "
