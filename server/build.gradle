@@ -1,0 +1,51 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'eclipse'
+apply plugin: 'application'
+
+group = 'rwin'
+version = 0.1 
+sourceCompatibility = 1.7
+
+mainClassName = "com.ctenophore.tag.GroundControl"
+
+repositories {
+    mavenCentral()
+    maven { url "http://repo.spring.io/libs-snapshot" }
+}
+
+dependencies {
+    // Jersey + Grizzly
+    compile 'org.glassfish.jersey:jersey-bom:2.4.1',
+            'org.glassfish.jersey.media:jersey-media-multipart:2.6',
+            'org.glassfish.jersey.containers:jersey-container-grizzly2-http:2.4.1',
+            'org.slf4j:slf4j-api:1.6.1',
+            'org.slf4j:slf4j-log4j12:1.7.5',
+            'com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.2.3',
+            'commons-cli:commons-cli:1.2'
+
+    testCompile 'junit:junit:4.11'
+}
+
+
+test {
+  // show standard out and standard error of the test JVM(s) on the console
+  testLogging.showStandardStreams = false
+
+  // set heap size for the test JVM(s)
+  minHeapSize = "512m"
+  maxHeapSize = "2048m"
+
+  // set JVM arguments for the test JVM(s)
+  jvmArgs '-Xmx2048m'
+  
+  // listen to events in the test execution lifecycle
+  beforeTest { descriptor ->
+     logger.lifecycle("Running test: " + descriptor)
+  }
+
+  // listen to standard out and standard error of the test JVM(s)
+  onOutput { descriptor, event ->
+     logger.lifecycle("Test: " + descriptor + " produced standard out/err: " + event.message )
+  }
+}
