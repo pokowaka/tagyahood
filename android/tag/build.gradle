@@ -23,5 +23,6 @@ dependencies {
     compile 'com.android.support:support-v4:19.0.1'
     compile 'org.osmdroid:osmdroid-android:4.1'
     compile 'com.loopj.android:android-async-http:1.4.4'
+    compile project(":openpaper/paint")
     compile fileTree(dir: 'libs', include: ['*.jar'])
 }

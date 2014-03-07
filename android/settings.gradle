@@ -1,1 +1,1 @@
-include ':tag'
+include ':tag', ':openpaper/paint'
