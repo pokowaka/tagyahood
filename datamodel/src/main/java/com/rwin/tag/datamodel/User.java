@@ -19,6 +19,9 @@ public class User {
     @JsonIgnore
     public String passwd;
     public ArtPiece tag;
+    
+    // Last time when the users fame was updated.
+    public long lastUpdated;
 
     public User() {
     }
