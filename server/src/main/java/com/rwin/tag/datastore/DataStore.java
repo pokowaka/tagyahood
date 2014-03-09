@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import com.rwin.tag.datamodel.ArtPiece;
 import com.rwin.tag.datamodel.Marker;
 import com.rwin.tag.datamodel.User;
-import com.rwin.tag.tile.OpenTile;
 
 public class DataStore {
 
@@ -43,37 +42,6 @@ public class DataStore {
         return artMap.get(id);
     }
 
-    public synchronized Marker getMarker(int zoom, int x, int y) {
-        if (zoom != Marker.MAX_ZOOM)
-            return null;
-        for (Marker t : tags) {
-            if (t.x == x && t.y == y)
-                return t;
-        }
-        return null;
-    }
-
-    public synchronized List<Marker> getMarkers(int zoom, int x, int y) {
-        OpenTile bounds = OpenTile.tile2BB(x, y, zoom, Marker.MAX_ZOOM);
-        List<Marker> found = new ArrayList<Marker>();
-
-        if (zoom == Marker.MAX_ZOOM) {
-            Marker m = getMarker(zoom, x, y);
-            if (m != null)
-                found.add(m);
-            return found;
-        }
-
-        // TODO(ErwinJ): Replace with db query :-)
-        for (Marker t : tags) {
-            if (bounds.south <= t.y && t.y <= bounds.north
-                    && bounds.west <= t.x && t.x <= bounds.east) {
-                found.add(t);
-            }
-        }
-        return found;
-    }
-
     public void addUser(User user) {
         this.userMap.put(user.name, user);
     }
@@ -82,29 +50,20 @@ public class DataStore {
         return this.userMap.get(name);
     }
 
-    public List<Marker> getMarkers(int zoom, int x, int y, int width, int height) {
-        int w = OpenTile.getXTile(OpenTile.tile2boundingBox(x, y, zoom).west,
-                Marker.MAX_ZOOM);
-        int e = OpenTile.getXTile(
-                OpenTile.tile2boundingBox(x + width, y, zoom).east,
-                Marker.MAX_ZOOM);
-        int n = OpenTile.getYTile(OpenTile.tile2boundingBox(x, y, zoom).north,
-                Marker.MAX_ZOOM);
-        int s = OpenTile.getYTile(
-                OpenTile.tile2boundingBox(x, y + height, zoom).south,
-                Marker.MAX_ZOOM);
-
-        LOG.info("Looking for " + w + " ," + e + "," + n + ", " + s);
+    public List<Marker> getMarkers(double latNorth, double lonEast,
+            double latSouth, double lonWest) {
         List<Marker> found = new ArrayList<Marker>();
 
-        // 41918 ,41924,101317, 101319
         for (Marker t : tags) {
-            // "x":41918,"y":101318
-            if (n <= t.y && t.y <= s && w <= t.x && t.x <= e) {
+            if (latSouth <= t.lat || t.lat <= latNorth || lonEast <= t.lon
+                    || t.lon <= lonWest)
                 found.add(t);
-            }
         }
         return found;
+    }
+
+    public int getZoom() {
+        return 18;
     }
 
 }

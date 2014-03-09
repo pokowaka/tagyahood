@@ -12,6 +12,7 @@ import com.rwin.tag.datamodel.ArtPiece;
 import com.rwin.tag.datamodel.Marker;
 import com.rwin.tag.datamodel.User;
 import com.rwin.tag.datastore.DataStore;
+import com.rwin.tag.util.NetworkUtils;
 
 public class TestLoader {
 
@@ -19,14 +20,20 @@ public class TestLoader {
         Random rnd = new Random();
 
         ArrayList<User> list = new ArrayList<User>();
-
+        String host = NetworkUtils.getPublicIpAddress();
+        int alpha = 0x80;
         for (int i = 0; i < 11; i++) {
             try {
                 BufferedImage img = ImageIO.read(new File(
                         "/Users/erwinj/Downloads/tags/png/" + i + ".png"));
                 ArtPiece a = ArtPiece.getTag(img);
+                a.url = "http://" + host + ":8080/v1/art/" + a.id;
+                int red = rnd.nextInt(255);
+                int green = rnd.nextInt(255);
+                int blue = rnd.nextInt(255);
                 DataStore.getInstance().addArtPiece(a);
                 User u = new User("rwin" + i, "foo!", a);
+                u.color = (alpha << 24) | (red << 16) | (green << 8) | blue;
                 DataStore.getInstance().addUser(u);
                 list.add(u);
             } catch (IOException e) {
@@ -41,10 +48,11 @@ public class TestLoader {
         for (int i = 0; i < 20; i++) {
             for (int j = 0; j < 20; j++) {
                 User u = list.get(rnd.nextInt(list.size()));
-                Marker t = new Marker(x + i, y + j, u.tag, u.name);
+                Marker t = new Marker(u.tag, u.name);
+                t.setX(18, x + i);
+                t.setY(18, y + j);
                 DataStore.getInstance().addMarker(t);
             }
         }
-
     }
 }
