@@ -21,21 +21,38 @@ public class ArtPiece {
 
     }
 
+    public static ArtPiece parse(String artPiece) {
+        return Util.parse(artPiece, ArtPiece.class);
+    }
+
     public UUID id;
-
-    public ArtType type;
-
-    public String url;
-
     @JsonIgnore
     public Object img;
+    public ArtType type;
+    public String url;
+    public long created;
+    public int ups;
+    public int downs;
+
+    public int score() {
+        return ups - downs;
+    }
+
+    // Reddit's voting http://amix.dk/blog/post/19588
+    public double confidence() {
+        int n = ups + downs;
+        if (n == 0)
+            return 0;
+
+        float z = 1.0f; // 1.0 = 85%, 1.6 = 95%
+        float phat = (float) ups / n;
+        return Math.sqrt(phat + z * z / (2 * n) - z
+                * ((phat * (1 - phat) + z * z / (4 * n)) / n))
+                / (1 + z * z / n);
+    }
 
     @Override
     public String toString() {
         return Util.toJsonString(this);
-    }
-    
-    public static ArtPiece parse(String artPiece) {
-        return Util.parse(artPiece, ArtPiece.class);
     }
 }

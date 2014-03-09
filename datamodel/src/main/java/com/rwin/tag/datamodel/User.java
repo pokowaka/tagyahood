@@ -7,15 +7,18 @@ import com.rwin.tag.util.Util;
 
 public class User {
 
-    public String name;
+    public static User parse(String content) {
+        return Util.parse(content, User.class);
+    }
 
-    @JsonIgnore
-    public String passwd;
-
-    public ArtPiece tag;
-
+    public int color;
+    public int fame;
     @JsonIgnore
     public Collection<Marker> markers;
+    public String name;
+    @JsonIgnore
+    public String passwd;
+    public ArtPiece tag;
 
     public User() {
     }
@@ -30,10 +33,5 @@ public class User {
     @Override
     public String toString() {
         return Util.toJsonString(this);
-    }
-    
-
-    public static User parse(String content) {
-        return Util.parse(content, User.class);
     }
 }

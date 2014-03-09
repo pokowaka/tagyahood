@@ -17,10 +17,10 @@ public class OpenTile {
     public static OpenTile tile2boundingBox(final int x, final int y,
             final int zoom) {
         OpenTile bb = new OpenTile();
-        bb.north = tile2lat(y, zoom);
-        bb.south = tile2lat(y + 1, zoom);
-        bb.west = tile2lon(x, zoom);
-        bb.east = tile2lon(x + 1, zoom);
+        bb.north = tile2Lat(y, zoom);
+        bb.south = tile2Lat(y + 1, zoom);
+        bb.west = tile2Lon(x, zoom);
+        bb.east = tile2Lon(x + 1, zoom);
         return bb;
     }
 
@@ -28,18 +28,18 @@ public class OpenTile {
             final int outzoom) {
         // TODO(ErwinJ): There likely is a faster & safer way..
         OpenTile bb = new OpenTile();
-        bb.north = getYTile(tile2lat(y, zoom), outzoom);
-        bb.south = getYTile(tile2lat(y + 1, zoom), outzoom);
-        bb.west = getXTile(tile2lon(x, zoom), outzoom);
-        bb.east = getXTile(tile2lon(x + 1, zoom), outzoom);
+        bb.north = getYTile(tile2Lat(y, zoom), outzoom);
+        bb.south = getYTile(tile2Lat(y + 1, zoom), outzoom);
+        bb.west = getXTile(tile2Lon(x, zoom), outzoom);
+        bb.east = getXTile(tile2Lon(x + 1, zoom), outzoom);
         return bb;
     }
 
-    static double tile2lon(int x, int z) {
+    public static double tile2Lon(int x, int z) {
         return x / Math.pow(2.0, z) * 360.0 - 180;
     }
 
-    static double tile2lat(int y, int z) {
+    public static double tile2Lat(int y, int z) {
         double n = Math.PI - (2.0 * Math.PI * y) / Math.pow(2.0, z);
         return Math.toDegrees(Math.atan(Math.sinh(n)));
     }
