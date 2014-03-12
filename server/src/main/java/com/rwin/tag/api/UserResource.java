@@ -20,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.rwin.tag.datamodel.ArtPiece;
+import com.rwin.tag.datamodel.Crew;
 import com.rwin.tag.datamodel.Marker;
 import com.rwin.tag.datamodel.User;
 import com.rwin.tag.datastore.DataStore;
@@ -66,12 +67,16 @@ public class UserResource {
     @Produces(MediaType.APPLICATION_JSON)
     public User createUser(@FormDataParam("picture") InputStream entityStream,
             @FormDataParam("name") String name,
+            @FormDataParam("crew") String crew,
             @FormDataParam("passwd") String passwd) throws IOException {
 
         // Store the image somewhere..
         RenderedImage img = ImageIO.read(entityStream);
         ArtPiece art = ArtPiece.getTag(img);
-        User user = new User(name, passwd, art);
+        Crew c = DataStore.getInstance().getCrew(crew);
+        if (c == null)
+            throw new NotFoundException("Crew does not exist");
+        User user = new User(name, passwd, c, art);
         DataStore.getInstance().addUser(user);
 
         LOG.info("createUser: entityStream: " + entityStream + ", name: "

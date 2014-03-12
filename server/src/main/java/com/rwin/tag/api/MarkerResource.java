@@ -18,13 +18,14 @@ import org.slf4j.LoggerFactory;
 
 import com.rwin.tag.datamodel.ArtPiece;
 import com.rwin.tag.datamodel.Marker;
+import com.rwin.tag.datamodel.User;
 import com.rwin.tag.datastore.DataStore;
 import com.rwin.tag.util.OpenTile;
 
 @Path("/v1/marker/")
 public class MarkerResource {
 
-    public static Logger log = LoggerFactory.getLogger(MarkerResource.class);
+    public static Logger LOG = LoggerFactory.getLogger(MarkerResource.class);
 
     @OPTIONS
     public Response options() {
@@ -37,15 +38,15 @@ public class MarkerResource {
             @QueryParam("lone") double lonEast,
             @QueryParam("lats") double latSouth,
             @QueryParam("lonw") double lonWest) {
-        log.info("getMarkers: latNorth: " + latNorth + " lonEast: " + lonEast
+        LOG.info("getMarkers: latNorth: " + latNorth + " lonEast: " + lonEast
                 + " latSouth: " + latSouth + " lonWest: " + lonWest);
 
         if (latNorth < latSouth) {
-            log.info("latn < lats");
+            LOG.info("latn < lats");
             throw new BadRequestException("latn < lats");
         }
         if (lonWest > lonEast) {
-            log.info("lonw > lone");
+            LOG.info("lonw > lone");
             throw new BadRequestException("lone > lonw");
         }
         return DataStore.getInstance().getMarkers(latNorth, lonEast, latSouth,
@@ -65,10 +66,11 @@ public class MarkerResource {
         if (a == null)
             throw new NotFoundException("Art: " + id + " does not exist");
 
-        if (DataStore.getInstance().getUser(name) == null)
+        User u = DataStore.getInstance().getUser(name);
+        if (u == null)
             throw new NotFoundException("User: " + name + " does not exist");
 
-        Marker m = new Marker(x, y, a, name);
+        Marker m = new Marker(x, y, a, u);
         DataStore.getInstance().addMarker(m);
         return m;
     }

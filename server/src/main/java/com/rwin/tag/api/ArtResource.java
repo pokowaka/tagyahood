@@ -30,5 +30,4 @@ public class ArtResource {
         LOG.info("getArtPiece: id: " + id);
         return (RenderedImage) a.img;
     }
-
 }

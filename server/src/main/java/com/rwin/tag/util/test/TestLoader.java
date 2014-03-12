@@ -9,6 +9,7 @@ import java.util.Random;
 import javax.imageio.ImageIO;
 
 import com.rwin.tag.datamodel.ArtPiece;
+import com.rwin.tag.datamodel.Crew;
 import com.rwin.tag.datamodel.Marker;
 import com.rwin.tag.datamodel.User;
 import com.rwin.tag.datastore.DataStore;
@@ -22,6 +23,7 @@ public class TestLoader {
         ArrayList<User> list = new ArrayList<User>();
         String host = NetworkUtils.getPublicIpAddress();
         int alpha = 0x80;
+        Crew[] crew = new Crew[] { new Crew("Cookie"), new Crew("RockSteady") };
         for (int i = 0; i < 11; i++) {
             try {
                 BufferedImage img = ImageIO.read(new File(
@@ -32,7 +34,7 @@ public class TestLoader {
                 int green = rnd.nextInt(255);
                 int blue = rnd.nextInt(255);
                 DataStore.getInstance().addArtPiece(a);
-                User u = new User("rwin" + i, "foo!", a);
+                User u = new User("rwin" + i, "foo!", crew[i % 2], a);
                 u.color = (alpha << 24) | (red << 16) | (green << 8) | blue;
                 DataStore.getInstance().addUser(u);
                 list.add(u);
@@ -48,7 +50,7 @@ public class TestLoader {
         for (int i = 0; i < 20; i++) {
             for (int j = 0; j < 20; j++) {
                 User u = list.get(rnd.nextInt(list.size()));
-                Marker t = new Marker(u.tag, u.name);
+                Marker t = new Marker(u);
                 t.setX(18, x + i);
                 t.setY(18, y + j);
                 DataStore.getInstance().addMarker(t);
