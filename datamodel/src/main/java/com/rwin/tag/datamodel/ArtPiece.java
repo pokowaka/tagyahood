@@ -55,4 +55,26 @@ public class ArtPiece {
     public String toString() {
         return Util.toJsonString(this);
     }
+
+    public int famePoints() {
+        return famePoints(this.type);
+    }
+    
+    /**
+     * Amount of famepoints you get per week..
+     * 
+     * @param type
+     * @return
+     */
+    public static int famePoints(ArtType type) {
+        switch (type) {
+        case Tag:
+            return 1;
+        case Piece:
+            return 25;
+        case ThrowUp:
+            return 5;
+        }
+        return 0;
+    }
 }

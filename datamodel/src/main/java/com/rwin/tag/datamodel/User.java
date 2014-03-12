@@ -19,18 +19,20 @@ public class User {
     @JsonIgnore
     public String passwd;
     public ArtPiece tag;
-    
+    public Crew crew;
+
     // Last time when the users fame was updated.
     public long lastUpdated;
 
     public User() {
     }
 
-    public User(String name, String passwd, ArtPiece tag) {
+    public User(String name, String passwd, Crew c, ArtPiece tag) {
         super();
         this.name = name;
         this.passwd = passwd;
         this.tag = tag;
+        this.crew = c;
     }
 
     @Override
