@@ -1,6 +1,7 @@
 package com.rwin.tag.datamodel;
 
 import java.util.Collection;
+import java.util.LinkedList;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.rwin.tag.util.Util;
@@ -14,7 +15,7 @@ public class User {
     public int color;
     public int fame;
     @JsonIgnore
-    public Collection<Marker> markers;
+    public Collection<Marker> markers = new LinkedList<Marker>();
     public String name;
     @JsonIgnore
     public String passwd;

@@ -6,6 +6,8 @@ import org.osmdroid.views.MapView;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
+import android.graphics.Point;
 import android.graphics.Rect;
 
 /**
@@ -26,6 +28,8 @@ public abstract class CachedOverlay extends VisibleOverlay {
 
     private static final String TAG = "com.ctenophore.ui.overlays.CachedOverlay";
 
+    private static final Point ZERO_POINT = new Point(0,0);
+
     protected Bitmap offscreen;
     boolean wasVisible = false;
     int lastZoomlevel;
@@ -33,6 +37,7 @@ public abstract class CachedOverlay extends VisibleOverlay {
     private IGeoPoint lastCenter;
 
     private void init(MapView map) {
+        this.mapView = map;
         Rect bounds = new Rect();
         mapView.getDrawingRect(bounds);
 
@@ -70,6 +75,8 @@ public abstract class CachedOverlay extends VisibleOverlay {
             // Reset the cached bitmap..
             init(mapView);
             Canvas c = new Canvas(offscreen);
+            Matrix mv = canvas.getMatrix();
+            c.setMatrix(mv);
 
             if (!visible)
                 hide();
@@ -82,7 +89,8 @@ public abstract class CachedOverlay extends VisibleOverlay {
         }
 
         if (visible) {
-            canvas.drawBitmap(offscreen, 0, 0, null);
+            Point dest = mapView.getProjection().toMapPixelsTranslated(ZERO_POINT, null);
+            canvas.drawBitmap(offscreen, dest.x, dest.y, null);
         }
 
         lastZoomlevel = mapView.getZoomLevel();

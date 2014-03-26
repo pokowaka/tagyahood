@@ -1,16 +1,20 @@
 package com.rwin.tag.datastore;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
+import org.geojson.FeatureCollection;
+import org.geojson.GeoJsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.rwin.tag.datamodel.ArtPiece;
 import com.rwin.tag.datamodel.Crew;
+import com.rwin.tag.datamodel.GeoRect;
 import com.rwin.tag.datamodel.Marker;
 import com.rwin.tag.datamodel.MarkerPolygon;
 import com.rwin.tag.datamodel.User;
@@ -37,8 +41,7 @@ public class DataStore {
 
     public void addMarker(Marker t) {
         tags.put(t.marker_id, t);
-        User u = userMap.get(t.owner);
-        u.markers.add(t);
+        t.owner.markers.add(t);
     }
 
     public void removeMarker(double lat, double lon) {
@@ -128,11 +131,35 @@ public class DataStore {
         return poly.get(polygon_id);
     }
 
-    public void add(MarkerPolygon poly) {
+    public void addPolygon(MarkerPolygon poly) {
         this.poly.put(poly.id, poly);
     }
 
     public void removePoly(MarkerPolygon markerPolygon) {
-      this.poly.remove(markerPolygon.id);
+        this.poly.remove(markerPolygon.id);
+    }
+
+    public List<MarkerPolygon> getPolygons(double latNorth, double lonEast,
+            double latSouth, double lonWest) {
+        List<MarkerPolygon> result = new LinkedList<>();
+        GeoRect gr = new GeoRect(latNorth, latSouth, lonEast, lonWest);
+        for (Entry<Long, MarkerPolygon> e : this.poly.entrySet()) {
+            MarkerPolygon mp = e.getValue();
+            LOG.info("getPolygons: " + mp.getBounds());
+            if (gr.intersects(mp.getBounds())) {
+                result.add(mp);
+            }
+        }
+
+        return result;
+    }
+
+    public GeoJsonObject getMarkersAsGeoJson(double latNorth, double lonEast,
+            double latSouth, double lonWest) {
+        FeatureCollection fc = new FeatureCollection();
+        for(Marker m : this.getMarkers(latNorth, lonEast, latSouth, lonWest)) {
+            fc.add(m.asGeoJson());
+        }
+        return fc;
     }
 }

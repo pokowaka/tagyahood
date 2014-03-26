@@ -1,1 +1,1 @@
-include ':tag', ':openpaper/paint'
+include ':tag', ':openpaper/paint', ':../datamodel'

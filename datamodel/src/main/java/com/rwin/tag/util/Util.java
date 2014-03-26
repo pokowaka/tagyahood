@@ -26,6 +26,7 @@ public final class Util {
             data = new ObjectMapper().readValue(content, type);
         } catch (Exception e) {
             // Nothing for now
+            throw new RuntimeException(e);
         }
         return data;
     }
@@ -37,6 +38,7 @@ public final class Util {
             data = new ObjectMapper().readValue(content, type);
         } catch (Exception e) {
             // Nothing for now
+            throw new RuntimeException(e);
         }
         return data;
     }

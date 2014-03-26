@@ -78,10 +78,8 @@ public class MarkerPolygonTest extends MarkerPolygon {
         MarkerPolygon poly = new MarkerPolygon(c, asList);
         MarkerPolygon poly2 = poly.splitBefore(new Marker(2, 2));
 
-        assertFalse(poly.isClosed());
-        assertEquals(2, poly.polygon.size());
+        assertEquals(4, poly2.size());
         assertEquals(new Marker(2, 2), poly2.first());
-        assertEquals(2, poly2.polygon.size());
 
         List<Marker> asList2 = Arrays.asList(new Marker(0, 0),
                 new Marker(0, 2), new Marker(2, 2), new Marker(2, 0));
@@ -92,13 +90,14 @@ public class MarkerPolygonTest extends MarkerPolygon {
         poly3 = new MarkerPolygon(c, asList2);
         poly4 = poly3.splitBefore(new Marker(0, 0));
         assertEquals(4, poly4.polygon.size());
-        assertEquals(0, poly3.polygon.size());
+        assertEquals(4, poly3.polygon.size());
+        assertEquals(poly3, poly4);
 
         poly3 = new MarkerPolygon(c, asList2);
+        poly3.remove(new Marker(0, 0));
         poly4 = poly3.splitAfter(new Marker(2, 2));
         assertEquals(1, poly4.polygon.size());
-        assertEquals(3, poly3.polygon.size());
-
+        assertEquals(2, poly3.polygon.size());
     }
 
     @Test
@@ -106,11 +105,11 @@ public class MarkerPolygonTest extends MarkerPolygon {
         Crew c = new Crew();
         Marker m1 = new Marker(0, 0);
         Marker m2 = new Marker(0, 2);
-        MarkerPolygon p = MarkerPolygon.combine(c, m1, m2);
+        MarkerPolygon p = MarkerPolygon.combine(m1, m2);
         assertEquals(2, p.polygon.size());
 
         Marker m3 = new Marker(2, 2);
-        MarkerPolygon p3 = MarkerPolygon.combine(c, m2, m3);
+        MarkerPolygon p3 = MarkerPolygon.combine(m2, m3);
 
         // Well, m3 should have ended up in the same polygon, since m3 is glued
         // at the end of m1,m2,m3
@@ -121,7 +120,7 @@ public class MarkerPolygonTest extends MarkerPolygon {
         Marker m6 = new Marker(5, 5);
         MarkerPolygon p4 = new MarkerPolygon(c, Arrays.asList(m4, m5, m6));
 
-        p = MarkerPolygon.combine(c, m2, m5);
+        p = MarkerPolygon.combine(m2, m5);
         assertEquals(m1, p.first());
         assertEquals(m6, p.last());
 

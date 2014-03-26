@@ -14,6 +14,7 @@ import com.rwin.tag.datamodel.Marker;
 import com.rwin.tag.datamodel.User;
 import com.rwin.tag.datastore.DataStore;
 import com.rwin.tag.util.NetworkUtils;
+import com.rwin.tag.util.OpenTile;
 
 public class TestLoader {
 
@@ -50,10 +51,11 @@ public class TestLoader {
         for (int i = 0; i < 20; i++) {
             for (int j = 0; j < 20; j++) {
                 User u = list.get(rnd.nextInt(list.size()));
-                Marker t = new Marker(u);
-                t.setX(18, x + i);
-                t.setY(18, y + j);
+                Marker t = new Marker(OpenTile.tile2Lat(y + j, 18),
+                        OpenTile.tile2Lon(x + i, 18), null, u);
+                t.art = u.tag;
                 DataStore.getInstance().addMarker(t);
+                DataStore.getInstance().addPolygon(t.polygon);
             }
         }
     }

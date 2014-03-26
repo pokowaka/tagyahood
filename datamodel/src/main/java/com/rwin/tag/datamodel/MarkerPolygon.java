@@ -1,12 +1,12 @@
 package com.rwin.tag.datamodel;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.rwin.tag.util.Util;
 
 /**
@@ -64,7 +64,7 @@ public class MarkerPolygon implements Iterable<Marker> {
 
     public static IdProvider idProvider = new CounterProvider();
 
-    public static MarkerPolygon combine(Crew c, Marker fst, Marker snd) {
+    public static MarkerPolygon combine(Marker fst, Marker snd) {
         MarkerPolygon fstPoly = fst.polygon;
         MarkerPolygon sndPoly = snd.polygon;
 
@@ -82,6 +82,9 @@ public class MarkerPolygon implements Iterable<Marker> {
         return Util.parse(content, MarkerPolygon.class);
     }
 
+    private GeoRect bounds = new GeoRect();
+
+    @JsonIgnore
     public Crew crew = new Crew();
 
     public long id = idProvider.getNextId();
@@ -105,6 +108,8 @@ public class MarkerPolygon implements Iterable<Marker> {
     public void add(Marker m) {
         if (isClosed())
             this.polygon.removeLast();
+
+        this.bounds.extend(m.lat, m.lon);
         this.polygon.addLast(m);
         m.polygon = this;
     }
@@ -188,6 +193,7 @@ public class MarkerPolygon implements Iterable<Marker> {
         return this.polygon.peekFirst();
     }
 
+    @JsonIgnore
     public synchronized double getArea() {
         if (!isClosed())
             return 0d;
@@ -204,6 +210,11 @@ public class MarkerPolygon implements Iterable<Marker> {
         }
         return Math.abs(area / 2);
 
+    }
+
+    @JsonIgnore
+    public GeoRect getBounds() {
+        return bounds;
     }
 
     public synchronized void insertAfter(Marker after, Marker element) {
@@ -301,12 +312,29 @@ public class MarkerPolygon implements Iterable<Marker> {
         return this.polygon.isEmpty();
     }
 
+    @Override
+    public Iterator<Marker> iterator() {
+        return this.polygon.iterator();
+    }
+
     public Marker last() {
         return this.polygon.peekLast();
     }
 
-    public void reverse() {
+    public void remove(Marker marker) {
+        if (marker.equals(this.polygon.peekFirst()) && isClosed()) {
+            unloop();
+        }
+        this.polygon.remove(marker);
+    }
+
+    public MarkerPolygon reverse() {
         Collections.reverse(this.polygon);
+        return this;
+    }
+
+    public int size() {
+        return this.polygon.size();
     }
 
     /**
@@ -318,15 +346,11 @@ public class MarkerPolygon implements Iterable<Marker> {
      * @return
      */
     public synchronized MarkerPolygon splitAfter(Marker m) {
-        unloop();
-        int iFst = polygon.indexOf(m);
-        if (iFst == -1)
-            return new MarkerPolygon(m.polygon.crew);
-
-        List<Marker> sublist = polygon.subList(iFst + 1, polygon.size());
-        MarkerPolygon split = new MarkerPolygon(this.crew, sublist);
-        sublist.clear();
-        return split;
+        int idx = this.polygon.indexOf(m);
+        if (idx == this.polygon.size() - 1) {
+            return new MarkerPolygon(crew);
+        }
+        return splitBefore(this.polygon.get(idx + 1));
     }
 
     /**
@@ -341,22 +365,28 @@ public class MarkerPolygon implements Iterable<Marker> {
      * @return
      */
     public synchronized MarkerPolygon splitBefore(Marker m) {
+        boolean isClosed = isClosed();
         unloop();
         int iFst = polygon.indexOf(m);
 
         if (iFst < 0)
             return new MarkerPolygon(m.polygon.crew);
+        if (iFst == 0)
+            return this;
 
         List<Marker> sublist = polygon.subList(iFst, polygon.size());
         MarkerPolygon split = new MarkerPolygon(this.crew, sublist);
         sublist.clear();
+        if (isClosed) {
+            return split.append(this);
+        }
         return split;
     }
 
     @Override
     public String toString() {
-        return "MarkerList [crew=" + crew + ", polygon=" + polygon + ", id="
-                + id + "]";
+        return "MarkerPolygon [bounds=" + bounds + ", crew=" + crew + ", id="
+                + id + ", polygon=" + polygon + "]";
     }
 
     public void unloop() {
@@ -366,9 +396,8 @@ public class MarkerPolygon implements Iterable<Marker> {
 
     }
 
-    @Override
-    public Iterator<Marker> iterator() {
-        return this.polygon.iterator();
+    public int indexOf(Marker m) {
+        return this.polygon.indexOf(m);
     }
 
 }

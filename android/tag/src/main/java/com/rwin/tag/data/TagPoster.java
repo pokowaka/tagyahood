@@ -1,4 +1,4 @@
-package com.rwin.tag;
+package com.rwin.tag.data;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;

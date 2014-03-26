@@ -16,6 +16,7 @@ import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.message.GZipEncoder;
 import org.glassfish.jersey.server.ResourceConfig;
+import org.glassfish.jersey.server.filter.EncodingFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -73,8 +74,11 @@ public class GroundControl {
         rc.register(MultiPartFeature.class);
         rc.packages("com.rwin.tag.api");
         rc.register(GZipEncoder.class);
+        EncodingFilter.enableFor(rc, GZipEncoder.class);
         final HttpServer server = GrizzlyHttpServerFactory.createHttpServer(
                 URI.create(baseUri), rc);
+        
+        
         server.start();
 
         TestLoader.CreateData();

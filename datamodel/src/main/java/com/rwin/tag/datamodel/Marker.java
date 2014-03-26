@@ -1,5 +1,9 @@
 package com.rwin.tag.datamodel;
 
+import org.geojson.Feature;
+import org.geojson.GeoJsonObject;
+import org.geojson.Point;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.rwin.tag.util.OpenTile;
 import com.rwin.tag.util.Util;
@@ -44,7 +48,7 @@ public class Marker {
     }
 
     public Marker(User u) {
-        this.owner = u;
+        this(0, 0, null, u);
     }
 
     public int getX(int zoom) {
@@ -101,4 +105,25 @@ public class Marker {
             return false;
         return true;
     }
+
+    /**
+     * Constructs a GeoJson object that makes total sense for mapbox
+     * 
+     * @return
+     */
+    public Feature asGeoJson() {
+        Feature f = new Feature();
+        Point location = new Point(this.lon, this.lat);
+        f.setGeometry(location);
+        f.setProperty("marker-size", "small");
+        if (owner != null) {
+            f.setProperty("marker-color",
+                    String.format("#%06X", (0xFFFFFF & owner.color)));
+            f.setProperty("title", owner.name);
+        }
+        if (art != null && art.url != null)
+            f.setProperty("image", art.url);
+        return f;
+    }
+
 }

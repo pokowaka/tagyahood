@@ -54,7 +54,7 @@ public abstract class VisibleOverlay extends Overlay {
 
     @Override
     public void draw(Canvas canvas, MapView mapView, boolean shadow) {
-        IGeoPoint center = mapView.getMapCenter();
+        this.mapView = mapView;
         boolean visible = isVisible();
         if (visible) {
             this.doDraw(canvas, mapView, shadow);

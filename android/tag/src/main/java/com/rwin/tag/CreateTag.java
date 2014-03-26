@@ -6,6 +6,8 @@ import org.openpaper.paint.action.BrushStroke;
 import org.openpaper.paint.drawing.PaperView;
 import org.openpaper.paint.drawing.brush.BezierBrush;
 
+import com.rwin.tag.data.TagPoster;
+
 import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.Bitmap.CompressFormat;

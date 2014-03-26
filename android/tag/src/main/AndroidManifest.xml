@@ -41,15 +41,15 @@
         <activity
             android:name="com.rwin.tag.Randi"
             android:label="@string/app_name" >
-        </activity>
-        <activity
-            android:name="com.rwin.tag.CreateTag"
-            android:label="@string/title_activity_create_tag" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name="com.rwin.tag.CreateTag"
+            android:label="@string/title_activity_create_tag" >
         </activity>
     </application>
 

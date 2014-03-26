@@ -16,13 +16,21 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
     }
+
+    packagingOptions {
+      exclude 'META-INF/LICENSE'
+      exclude 'META-INF/NOTICE'
+    }
 }
 
 dependencies {
-    compile 'com.android.support:appcompat-v7:+'
-    compile 'com.android.support:support-v4:19.0.1'
-    compile 'org.osmdroid:osmdroid-android:4.1'
-    compile 'com.loopj.android:android-async-http:1.4.4'
-    compile project(":openpaper/paint")
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+  compile 'com.android.support:appcompat-v7:+',
+          'com.android.support:support-v4:19.0.1',
+          'org.osmdroid:osmdroid-android:4.1',
+          'com.squareup.picasso:picasso:2.2.0',
+          'com.loopj.android:android-async-http:1.4.4',
+          'org.slf4j:slf4j-android:1.7.6',
+          project(":openpaper/paint"),
+          project(":../datamodel"),
+          fileTree(dir: 'libs', include: ['*.jar'])
 }

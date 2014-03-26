@@ -13,6 +13,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.geojson.GeoJsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,7 +35,7 @@ public class MarkerResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Marker> getMarkers(@QueryParam("latn") double latNorth,
+    public GeoJsonObject getMarkers(@QueryParam("latn") double latNorth,
             @QueryParam("lone") double lonEast,
             @QueryParam("lats") double latSouth,
             @QueryParam("lonw") double lonWest) {
@@ -49,7 +50,7 @@ public class MarkerResource {
             LOG.info("lonw > lone");
             throw new BadRequestException("lone > lonw");
         }
-        return DataStore.getInstance().getMarkers(latNorth, lonEast, latSouth,
+        return DataStore.getInstance().getMarkersAsGeoJson(latNorth, lonEast, latSouth,
                 lonWest);
     }
 
@@ -72,6 +73,7 @@ public class MarkerResource {
 
         Marker m = new Marker(x, y, a, u);
         DataStore.getInstance().addMarker(m);
+        DataStore.getInstance().addPolygon(m.polygon);
         return m;
     }
 

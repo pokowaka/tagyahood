@@ -1,47 +1,54 @@
 package com.rwin.tag;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.osmdroid.util.GeoPoint;
-import org.osmdroid.views.overlay.MinimapOverlay;
-import org.osmdroid.views.overlay.ScaleBarOverlay;
+import org.osmdroid.views.MapView;
+import org.osmdroid.views.overlay.ItemizedIconOverlay.OnItemGestureListener;
+import org.osmdroid.views.overlay.ItemizedOverlayWithFocus;
 import org.osmdroid.views.overlay.compass.CompassOverlay;
 import org.osmdroid.views.overlay.compass.InternalCompassOrientationProvider;
 
 import android.app.Activity;
 import android.content.Context;
-import android.hardware.Camera;
-import android.hardware.Camera.PictureCallback;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.view.Menu;
 
+import com.rwin.tag.data.DataController;
+import com.rwin.tag.data.DataModel;
+import com.rwin.tag.datamodel.ArtPiece;
+import com.rwin.tag.datamodel.Marker;
+import com.rwin.tag.datamodel.User;
+import com.rwin.tag.ui.layout.MarkerOverlayItem;
+import com.rwin.tag.ui.maps.ArtMapView;
+import com.rwin.tag.ui.maps.ArtOverlay;
+import com.rwin.tag.ui.maps.ArtOverlay.MarkerSelectionListener;
 import com.rwin.tag.ui.maps.LocationOverlay;
-import com.rwin.tag.ui.maps.MapView;
 
-public class Randi extends Activity {
-    private Camera mCamera;
-    private CameraPreview mPreview;
+public class Randi extends Activity implements
+        OnItemGestureListener<MarkerOverlayItem> {
     private SimpleLocationTracker mTracker;
-    private TagPoster tagger;
-    private MapView mMapView;
+    private ArtMapView mMapView;
     private CompassOverlay mCompassOverlay;
     private LocationOverlay mLocationOverlay;
-    private MinimapOverlay mMinimapOverlay;
-    private ScaleBarOverlay mScaleBarOverlay;
+    private ItemizedOverlayWithFocus<MarkerOverlayItem> itemOverlay;
     // private RotationGestureOverlay mRotationGestureOverlay;
     private static final String TAG = "com.rwin.randy.Randi";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         final Context context = this;
 
-        mMapView = new MapView(context);
-
+        // setContentView(R.layout.activity_randi);
+        // mMapView = (ArtMapView) findViewById(R.id.artMapView);
+        mMapView = new ArtMapView(context);
         this.mTracker = new SimpleLocationTracker(this);
         mMapView.getController().setCenter(
                 new GeoPoint(mTracker.getLastKnownLocation()));
-        setContentView(mMapView);
 
         this.mCompassOverlay = new CompassOverlay(context,
                 new InternalCompassOrientationProvider(context), mMapView);
@@ -52,36 +59,39 @@ public class Randi extends Activity {
         mMapView.setBuiltInZoomControls(true);
         mMapView.setMultiTouchControls(true);
         mMapView.getOverlays().add(this.mLocationOverlay);
-        // mMapView.getOverlays().add(this.mCompassOverlay);
+
+        itemOverlay = new ItemizedOverlayWithFocus<MarkerOverlayItem>(context,
+                new ArrayList<MarkerOverlayItem>(), this);
+        mMapView.getOverlays().add(itemOverlay);
 
         mMapView.getController().setZoom(10);
         mLocationOverlay.enableMyLocation();
 
+        this.setContentView(mMapView);
+
+        final DataModel model = DataController.getInstance().getModel();
+        model.addPropertyChangeListener("markers",
+                new PropertyChangeListener() {
+
+                    @Override
+                    public void propertyChange(PropertyChangeEvent event) {
+                        itemOverlay.removeAllItems();
+                        for (Marker m : model.getMarkers()) {
+                            itemOverlay.addItem(new MarkerOverlayItem(m));
+                        }
+                    }
+                });
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        // getMenuInflater().inflate(R.menu.randi, menu);
+    public boolean onItemSingleTapUp(int paramInt, MarkerOverlayItem paramT) {
+        itemOverlay.setFocusedItem(paramInt);
         return true;
     }
 
-    /** A safe way to get an instance of the Camera object. */
-    public static Camera getCameraInstance() {
-        Camera c = null;
-        try {
-            c = Camera.open(); // attempt to get a Camera instance
-        } catch (Exception e) {
-            // Camera is not available (in use or does not exist)
-        }
-        return c; // returns null if camera is unavailable
+    @Override
+    public boolean onItemLongPress(int paramInt, MarkerOverlayItem paramT) {
+        // TODO Auto-generated method stub
+        return false;
     }
-
-    private PictureCallback mPicture = new PictureCallback() {
-
-        @Override
-        public void onPictureTaken(byte[] data, Camera camera) {
-
-        }
-    };
 }

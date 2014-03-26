@@ -3,6 +3,6 @@
 
     <string name="app_name">Tag Ya Hood</string>
     <string name="action_settings">Settings</string>
-    <string name="title_activity_create_tag">CreateTag</string>
+    <string name="title_activity_create_tag">Tag Ya Hood</string>
 
 </resources>
