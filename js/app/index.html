@@ -1,0 +1,81 @@
+<html>
+<head>
+<meta charset=utf-8 />
+<title>GeoJSON Marker from URL</title>
+
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no' />
+<script src='https://api.tiles.mapbox.com/mapbox.js/v1.6.2/mapbox.js'></script>
+<link href='https://api.tiles.mapbox.com/mapbox.js/v1.6.2/mapbox.css' rel='stylesheet' />
+
+<style>
+  body { margin:0; padding:0; }
+  #map { position:absolute; top:0; bottom:0; width:100%; }
+</style>
+<style>
+  #info {
+    background:rgba(255,255,255,0.75);
+    border:1px solid #fff;
+    position:absolute;
+    width:260px;
+    top:10px;
+    right:10px;
+    padding:10px;
+    border-radius:3px;
+    }
+</style>
+
+</head>
+<body>
+<div id='map'></div>
+<div id='info'></div>
+<script>
+var map = L.map('map')
+    .setView([37.7756, -122.4193], 15)
+    .addLayer(L.mapbox.tileLayer('examples.map-20v6611k', {
+        detectRetina: true
+    }));
+
+// As with any other AJAX request, this technique is subject to the Same Origin Policy:
+// http://en.wikipedia.org/wiki/Same_origin_policy
+// So the CSV file must be on the same domain as the Javascript, or the server
+// delivering it should support CORS.
+var featureLayer = L.mapbox.featureLayer()
+    .loadURL('http://localhost:8080/v1/marker?latn=37.71859&lone=-122.34375&lats=37.71859&lonw=-123.34375')
+    .addTo(map);
+
+
+// Listen for individual marker clicks
+featureLayer.on('click',function(e) {
+    // Force the popup closed.
+    e.layer.closePopup();
+
+    var feature = e.layer.feature;
+    var info = '<h2>' + feature.properties.title + '</h2>' +
+    '<img src="' + feature.properties.image + '"></img>';
+
+
+    document.getElementById('info').innerHTML = info;
+});
+
+var popup = L.popup()
+	.setLatLng([37.7756, -122.4193])
+  .setContent('<p>Place grafitti!<br /><button onclick="placeTag()">Tag</button><button onclick="placeThrow()">Throw Up</button><button onclick="placeArt()">Art Piece</button></p>');
+visible = false;
+
+// Listen for map events
+map.on('click', function(e) {
+    if (!visible) {
+    popup.setLatLng(e.latlng).openOn(map);
+    }
+    visible = !visible;
+});
+
+
+// Clear the tooltip when map is clicked
+map.on('move',function(e){
+    document.getElementById('info').innerHTML = '<h2>Click a marker</h2>';
+});
+
+</script>
+</body>
+</html>
