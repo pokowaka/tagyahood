@@ -6,8 +6,6 @@ import java.util.Collection;
 import java.util.UUID;
 
 import org.json.JSONObject;
-import org.osmdroid.util.BoundingBoxE6;
-
 import android.content.Context;
 import android.util.Log;
 import android.widget.ImageView;
@@ -17,6 +15,8 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
+import com.mapbox.mapboxsdk.format.GeoJSON;
+import com.mapbox.mapboxsdk.geometry.BoundingBox;
 import com.rwin.tag.datamodel.ArtPiece;
 import com.rwin.tag.datamodel.Marker;
 import com.rwin.tag.util.Util;
@@ -75,41 +75,12 @@ public class DataController {
         });
     }
 
-    public void updateLocation(BoundingBoxE6 tile) {
-        String uri = baseUrl + "/v1/marker/";
-        RequestParams params = new RequestParams();
-        params.put("latn", String.valueOf(tile.getLatNorthE6() / E6));
-        params.put("lonw", String.valueOf(tile.getLonWestE6() / E6));
-        params.put("lats", String.valueOf(tile.getLatSouthE6() / E6));
-        params.put("lone", String.valueOf(tile.getLonEastE6() / E6));
-        httpClient.get(uri, params, new TextHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, String response) {
-                Log.i(TAG, "Got the response: " + response);
-                // Let's try to parse the response
-                try {
-                    Collection<Marker> markers = Util.parse(response,
-                            new TypeReference<Collection<Marker>>() {
-                            });
-                    for (Marker m : markers) {
-                        DataController.this.model.addArt(m.art);
-                    }
-                    DataController.this.model.setMarkers(markers);
-                } catch (Exception e) {
-                    Log.e(TAG, "Cannot process response error:" + e);
-                }
-            };
+    public String getLocationUrl(BoundingBox tile) {
+        if (tile == null)
+            return "";
 
-            @Override
-            public void onFailure(int statusCode,
-                    org.apache.http.Header[] headers, String responseBody,
-                    Throwable e) {
-                Log.e(TAG, "Got bad news: " + statusCode + ", responseBody: "
-                        + responseBody + ", e: " + e);
-            };
-
-        });
-
+        return String.format(baseUrl + "/v1/marker?latn=%f&lonw=%f&lats=%f&lone=%f", tile.getLatNorth(), tile.getLonWest(),
+        tile.getLatSouth(),tile.getLonEast());
     }
 
     public void loadArtPieceIntoView(String id, Context context,

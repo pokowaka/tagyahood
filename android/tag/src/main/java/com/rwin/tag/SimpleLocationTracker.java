@@ -1,7 +1,5 @@
 package com.rwin.tag;
 
-import org.osmdroid.views.overlay.mylocation.IMyLocationConsumer;
-import org.osmdroid.views.overlay.mylocation.IMyLocationProvider;
 
 import android.content.Context;
 import android.location.Criteria;
@@ -10,12 +8,11 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 
-public class SimpleLocationTracker implements IMyLocationProvider {
+public class SimpleLocationTracker  {
 
     private static final int TWO_MINUTES = 1000 * 60 * 2;
     private Location lastLoc;
     private String provider;
-    private IMyLocationConsumer consumer;
     private LocationListener locationListener;
     private LocationManager locationManager;
 
@@ -35,10 +32,6 @@ public class SimpleLocationTracker implements IMyLocationProvider {
             public void onLocationChanged(Location location) {
                 if (lastLoc == null || isBetterLocation(location, lastLoc)) {
                     lastLoc = location;
-                }
-                if (consumer != null) {
-                    consumer.onLocationChanged(lastLoc,
-                            SimpleLocationTracker.this);
                 }
             }
 
@@ -119,20 +112,4 @@ public class SimpleLocationTracker implements IMyLocationProvider {
         return provider1.equals(provider2);
     }
 
-    @Override
-    public Location getLastKnownLocation() {
-        return lastLoc;
-    }
-
-    @Override
-    public boolean startLocationProvider(
-            IMyLocationConsumer paramIMyLocationConsumer) {
-        this.consumer = paramIMyLocationConsumer;
-        return true;
-    }
-
-    @Override
-    public void stopLocationProvider() {
-
-    }
 }

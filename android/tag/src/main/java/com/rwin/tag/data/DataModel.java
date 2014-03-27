@@ -6,9 +6,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.osmdroid.api.IGeoPoint;
-import org.osmdroid.util.BoundingBoxE6;
-
 import android.location.Location;
 
 import com.rwin.tag.datamodel.ArtPiece;
@@ -26,15 +23,15 @@ public class DataModel {
 
     private PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
-    private BoundingBoxE6 markerBounds = new BoundingBoxE6(0, 0, 0, 0);
+    //private BoundingBoxE6 markerBounds = new BoundingBoxE6(0, 0, 0, 0);
 
     public Collection<Marker> getMarkers() {
         return markers;
     }
 
-    public BoundingBoxE6 getMarkerBounds() {
-        return markerBounds;
-    }
+//    public BoundingBoxE6 getMarkerBounds() {
+//        return markerBounds;
+//    }
 
     public void setMarkers(Collection<Marker> markers) {
 
@@ -58,7 +55,7 @@ public class DataModel {
             maxLon = Math.max(maxLon, longitudeE6);
         }
 
-        markerBounds = new BoundingBoxE6(maxLat, maxLon, minLat, minLon);
+        //markerBounds = new BoundingBoxE6(maxLat, maxLon, minLat, minLon);
         pcs.firePropertyChange("markers", oldValue, this.markers);
     }
 
@@ -88,20 +85,20 @@ public class DataModel {
         if (piece != null && piece.id != null)
             art.put(piece.id.toString(), piece);
     }
-
-    public Marker getClosestMarker(IGeoPoint gp) {
-        float dist = Float.MAX_VALUE;
-        Marker closest = null;
-        double lat = gp.getLatitude();
-        double lon = gp.getLongitude();
-        float result[] = new float[1];
-        for (Marker m : markers) {
-            Location.distanceBetween(lat, lon, m.lat, m.lon, result);
-            if (result[0] < dist) {
-                closest = m;
-                dist = result[0];
-            }
-        }
-        return closest;
-    }
+//
+//    public Marker getClosestMarker(IGeoPoint gp) {
+//        float dist = Float.MAX_VALUE;
+//        Marker closest = null;
+//        double lat = gp.getLatitude();
+//        double lon = gp.getLongitude();
+//        float result[] = new float[1];
+//        for (Marker m : markers) {
+//            Location.distanceBetween(lat, lon, m.lat, m.lon, result);
+//            if (result[0] < dist) {
+//                closest = m;
+//                dist = result[0];
+//            }
+//        }
+//        return closest;
+//    }
 }
